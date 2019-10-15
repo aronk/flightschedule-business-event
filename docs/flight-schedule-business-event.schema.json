@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Flight Schedule",
+  "description": "An airline flight schedule",
+  "type": "object",
+  "properties": {
+    "eventType": {
+      "description": "",
+      "type": "string"
+    },
+    "flightDelayed": {
+      "type": "object",
+      "properties": {
+        "flightScheduleId": {
+          "description": "The unique identifier for a flight schedule",
+          "type": "integer"
+        },
+        "flightNumber": {
+          "description": "The flight number",
+          "type": "string"
+        },
+        "departureDate": {
+          "description": "The flight departure date",
+          "type": "string",
+          "format": "date"
+        },
+        "scheduledDepartureTime": {
+          "description": "The flight scheduled departure time",
+          "type": "string",
+          "format": "date-time"
+        },
+        "estimatedDepartureTime": {
+          "description": "The flight estimated departure time",
+          "type": "string",
+          "format": "date-time"
+        },
+        "originPort": {
+          "description": "The flight origin port",
+          "type": "string"
+        },
+        "originCountry": {
+          "description": "The flight origin country",
+          "type": "string"
+        },
+        "destinationPort": {
+          "description": "The flight destination port",
+          "type": "string"
+        },
+        "destinationCountry": {
+          "description": "The flight destination country",
+          "type": "string"
+        }
+      },
+      "required": [
+        "flightScheduleId",
+        "flightNumber",
+        "departureDate",
+        "scheduledDepartureTime",
+        "estimatedDepartureTime",
+        "originPort",
+        "originCountry",
+        "destinationPort",
+        "destinationCountry",
+        "airline"
+      ]
+    }
+  },
+  "required": [
+    "eventType"
+  ]
+}
