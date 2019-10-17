@@ -53,24 +53,20 @@ public class FlightScheduleService {
 
         FlightSchedule newFlightSchedule = flightScheduleTransformer.fromFlightScheduleDataEvent(flightScheduleDataEvent);
 
-        Optional<FlightSchedule> existingFlightSchedule = flightScheduleRepository.findById(newFlightSchedule.getId());
+        boolean isFlightDelayed = flightScheduleRepository.findById(newFlightSchedule.getId())
+                .map(existingFlightSchedule -> isDateTimeOutsideDeltaInMinutes(existingFlightSchedule.getEstimatedDepartureTime(),
+                        newFlightSchedule.getEstimatedDepartureTime(), estimatedDepartureTimeDeltaMins))
+                .orElse(false);
+
+        if (isFlightDelayed) {
+            newFlightSchedule.setStatus(FlightSchedule.FlightScheduleStatus.DELAYED);
+        }
 
         FlightSchedule newFlightScheduleSaved = flightScheduleRepository.save(newFlightSchedule);
         log.debug("newFlightScheduleSaved={}", newFlightScheduleSaved);
 
-        if (existingFlightSchedule.isPresent()) {
-            performBusinessEventNotifications(newFlightSchedule, existingFlightSchedule.get());
-        }
+        if (isFlightDelayed) {
 
-    }
-
-    private void performBusinessEventNotifications(FlightSchedule newFlightSchedule, FlightSchedule existingFlightSchedule) {
-        // NOTE : this could be modified to have a number of business event decisions being made, for now it is just one
-
-        boolean isOutsideRange = isDateTimeOutsideDeltaInMinutes(existingFlightSchedule.getEstimatedDepartureTime(),
-                newFlightSchedule.getEstimatedDepartureTime(), estimatedDepartureTimeDeltaMins);
-
-        if (isOutsideRange) {
             FlightScheduleBusinessEvent flightScheduleBusinessEvent = flightScheduleTransformer.toFlightDelayedBusinessEvent(newFlightSchedule);
             log.info("Sending  flightScheduleBusinessEvent: {}", flightScheduleBusinessEvent);
 
@@ -79,6 +75,7 @@ public class FlightScheduleService {
                             .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
                             .build());
         }
+
     }
 
     public Optional<FlightSchedule> getFlightSchedule(Long id) {

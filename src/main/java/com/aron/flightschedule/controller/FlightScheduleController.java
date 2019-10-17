@@ -26,9 +26,6 @@ public class FlightScheduleController {
         return flightScheduleService.getFlightSchedule(id).orElseThrow(() -> new ResourceNotFoundException("supplied id not found"));
     }
 
-    // FIXME :
-//    @RequestMapping(value = "/{id}/status", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-
     // NOTE: only here to help in testing application to be able to put messages on topicin
     @RequestMapping(value = "/data-events", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)

@@ -17,6 +17,10 @@ import java.time.LocalDateTime;
 @Builder
 public class FlightSchedule {
 
+    public enum FlightScheduleStatus {
+        SCHEDULED, DELAYED
+    }
+
     // TODO: could use @NotNull for validation of mandatory and formatting business rules
 
     @Id
@@ -30,5 +34,6 @@ public class FlightSchedule {
     private String destinationPort;
     private String destinationCountry;
     private String airline;
+    private FlightScheduleStatus status;
 
 }

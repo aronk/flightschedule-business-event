@@ -30,5 +30,6 @@ public class FlightDelayedBusinessEvent {
     private String destinationPort;
     private String destinationCountry;
     private String airline;
+    private String flightScheduleStatus;
 
 }

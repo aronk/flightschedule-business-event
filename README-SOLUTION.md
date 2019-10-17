@@ -16,7 +16,7 @@ Next step was to create a task list that captures all/most the work to be done s
 - design the model for the 'flight-schedule-business-event' service, JSON, in Mongo db
 - how to [validate JSON schema](https://www.jsonschemavalidator.net/)
 - bare bones app, [Java 8](https://hub.docker.com/_/openjdk), [Maven](maven:3.5-jdk-8-alpine), Spring Boot 2 with Kafka and Spring Data MongoDB
-- github repo, [README.md](https://github.com/aronk/flightschedule-business-event/blob/master/README.md),
+- github repo, [README](https://github.com/aronk/flightschedule-business-event/blob/master/README.md),
 - N/A: security
 - N/A: tracing, auditing
 - N/A: timezone translation
@@ -45,17 +45,20 @@ Finally, the actual work could start after the github repository was created and
 
 ### Deliverables
 1. High level architecture diagram for moving data from the ODS into the new NoSQL store.
-- See [diagram](docs/ods-fss-architecture-diagram.png)
-- It is proposed that a single bulk/batch synchronisation of data is performed utilising the Kafka Connectors to both the source RDBMS and the sink MongoDB
+- See [high level architecture diagram](docs/ods-fss-architecture-diagram.png)
+- It is proposed that a single bulk/batch synchronisation of data is performed utilising the Kafka Connectors to both the source [RDBMS](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc) and the sink [MongoDB](https://www.confluent.io/hub/mongodb/kafka-connect-mongodb)
 - This diagram is based on [Confluent's data transfer best practices](https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc)
 
 2. Design a JSON event schema to capture database changes from the ODS according to the ERD diagram provided.
-- JSON Schema: [docs/flight-schedule.schema.json](docs/flight-schedule.schema.json)
-- JSON Sample: [docs/flight-schedule-001.json](docs/flight-schedule-001.json)
+- [JSON Schema](docs/flight-schedule-data-event.schema.json)
+- [JSON Sample 1](docs/flight-schedule-data-event-001.json)
+- [JSON Sample 2](docs/flight-schedule-data-event-002.json)
+- [JSON Sample 3](docs/flight-schedule-data-event-003.json)
+- [JSON Sample 4](docs/flight-schedule-data-event-004.json)
 
 3. Design a JSON event schema to capture business events that will be emitted by the new application e.g. FLIGHT_DELAYED.
-- JSON Schema: [docs/flight-schedule-business-event.schema.json](docs/flight-schedule-business-event.schema.json)
-- JSON Sample: [docs/flight-schedule-business-event.json](docs/flight-schedule-business-event.json)
+- [JSON Schema](docs/flight-schedule-business-event.schema.json)
+- [JSON Sample](docs/flight-schedule-business-event.json)
 
 4. Build a new micro service capable of:
 a. Consuming database change events
@@ -81,9 +84,10 @@ d. Detecting and publishing FLIGHT_DELAYED business events based on estimated de
 - See [docker-compose.yml](docker-compose.yml)
 
 6. Code checked into GitHub
+- https://github.com/aronk/flightschedule-business-event
 
 7. A README file of how to run/test the application.
-- See [README.md](README.md)
+- See [README](README.md)
 
 ### Optional
 8. Simple REST API to GET current status of a flight.

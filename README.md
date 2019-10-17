@@ -1,12 +1,12 @@
 # Flight Schedule Business Event
 
 ## Task
-See [README-TASK.md](README-TASK.md).
+See this for the [task definition](README-TASK.md).
 
 ## Solution
-See [README-SOLUTION.md](README-SOLUTION.md).
+See this for the [solution](README-SOLUTION.md).
 
-## Overview
+## Project Overview
 The following ports are used locally so that it is possible to develop and run on the localhost, as well as inside Docker.
 - 2181 : Zookeeper
 - 9092 : Kafka
@@ -18,7 +18,7 @@ The following ports are used locally so that it is possible to develop and run o
 The following instructions can either be run all in one shell, if possible, one shell for each component like [this](docs/development.png).
 
 ### Set Host IP
-For Kafka to work in this configuration, the host IP address is required to be set.
+For Kafka to work in this configuration, the host IP address is required to be set in every shell that executes docker-compose commands.
 For example:
 ```bash
 export KAFKA_ADVERTISED_HOST_NAME="192.168.2.102"
@@ -57,8 +57,6 @@ docker-compose up -d mongo-ui
 docker-compose logs mongo-ui
 docker-compose stop mongo-ui
 
-# test mongo-ui
-open http://localhost:8081
 ```
 
 ### Build and run app
@@ -71,7 +69,6 @@ docker-compose up --build maven-build
 # run the app
 #mvn spring-boot:run
 docker-compose up --build fs-app
-
 ```
 
 ### Stop running containers and clean build
@@ -85,7 +82,6 @@ docker volume ls
 
 # remove all volumes if need be!
 docker system prune --volumes
-
 ```
 
 ## How to test
@@ -96,23 +92,27 @@ curl http://localhost:8080/actuator/info && echo
 curl http://localhost:8080/actuator/health && echo
 
 # initial create for 06:20
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-001.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-001.json && echo
 
 # update to 06:30
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-002.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-002.json && echo
 
 # update to 06:15
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-003.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-003.json && echo
 
-# update to 06:31, expecting an eventType FLIGHT_DELAYED business event
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-004.json && echo
+DELAYED
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-004.json && echo
 
-# get current status of flight
+# get current status of flight returning 200
 curl http://localhost:8080/flightschedules/12345678 && echo
 
-# get current status of a flight that doesn't exist
+# get current status of a flight that doesn't exist returning 404
 curl http://localhost:8080/flightschedules/1 && echo
+```
 
+### Check MongoDB via web ui
+```bash
+open http://localhost:8081
 ```
 
 ### Test Kafka

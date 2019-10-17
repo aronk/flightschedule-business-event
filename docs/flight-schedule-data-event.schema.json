@@ -42,6 +42,10 @@
     "destinationCountry": {
       "description": "The flight destination country",
       "type": "string"
+    },
+    "airline": {
+      "description": "The airline code",
+      "type": "string"
     }
   },
   "required": [

@@ -2,6 +2,7 @@ package com.aron.flightschedule.model;
 
 import org.springframework.stereotype.Component;
 
+import static com.aron.flightschedule.model.FlightSchedule.FlightScheduleStatus.SCHEDULED;
 import static com.aron.flightschedule.model.FlightScheduleBusinessEvent.BusinessEventType.FLIGHT_DELAYED;
 
 @Component
@@ -20,6 +21,7 @@ public class FlightScheduleTransformer {
                 .destinationPort(flightScheduleDataEvent.getDestinationPort())
                 .destinationCountry(flightScheduleDataEvent.getDestinationCountry())
                 .airline(flightScheduleDataEvent.getAirline())
+                .status(SCHEDULED)
                 .build();
     }
 
@@ -38,6 +40,7 @@ public class FlightScheduleTransformer {
                         .destinationPort(flightSchedule.getDestinationPort())
                         .destinationCountry(flightSchedule.getDestinationCountry())
                         .airline(flightSchedule.getAirline())
+                        .flightScheduleStatus(flightSchedule.getStatus().name())
                         .build())
                 .build();
     }

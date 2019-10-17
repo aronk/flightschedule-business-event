@@ -9,7 +9,6 @@ public interface FlightScheduleStreams {
 
     String TOPICIN_SUB = "topicin-sub";
     String TOPICIN_PUB = "topicin-pub";
-
     String TOPICOUT_SUB = "topicout-sub";
     String TOPICOUT_PUB = "topicout-pub";
 

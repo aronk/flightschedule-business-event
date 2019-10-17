@@ -49,6 +49,14 @@
         "destinationCountry": {
           "description": "The flight destination country",
           "type": "string"
+        },
+        "airline": {
+          "description": "The airline code",
+          "type": "string"
+        },
+        "status": {
+          "description": "The flight status",
+          "type": "string"
         }
       },
       "required": [
@@ -61,7 +69,8 @@
         "originCountry",
         "destinationPort",
         "destinationCountry",
-        "airline"
+        "airline",
+        "status"
       ]
     }
   },
