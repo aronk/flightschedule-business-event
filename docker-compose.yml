@@ -39,7 +39,6 @@ services:
       context: .
       dockerfile: Dockerfile.maven
       args:
-        # TODO : Get username and uid from host
         - MAVEN_USER_NAME=aronk
         - MAVEN_USER_ID=567
         - MAVEN_GROUP_ID=567
@@ -57,11 +56,6 @@ services:
     working_dir: /usr/src/app
     user: aronk
     command: mvn -e -B -Duser.home=/var/maven clean verify -DargLine="-Xmx1536m"
-#    ulimits:
-#      nproc: 2048
-#      nofile:
-#        soft: 2048
-#        hard: 4096
 
   fs-app:
     build:
