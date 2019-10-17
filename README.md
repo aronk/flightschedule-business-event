@@ -11,10 +11,11 @@ The following ports are used locally so that it is possible to develop and run o
 - 2181 : Zookeeper
 - 9092 : Kafka
 - 27017 : MongoDB
-- 8081 : MongoDB Express (UI console)
-- 8080 : Java (Spring Boot) app
+- 8081 : [MongoDB Express](docs/mongo-ui.png) (UI console)
+- 8080 : [Java (Spring Boot) app](docs/health-status.png)
 
 ## How to build and run
+The following instructions can either be run all in one shell, if possible, one shell for each component like [this](docs/development.png).
 
 ### Set Host IP
 For Kafka to work in this configuration, the host IP address is required to be set.
@@ -94,9 +95,6 @@ docker system prune --volumes
 curl http://localhost:8080/actuator/info && echo
 curl http://localhost:8080/actuator/health && echo
 
-curl http://localhost:8080/flightschedules/12345678 && echo
-curl http://localhost:8080/flightschedules/1 && echo
-
 # initial create for 06:20
 curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-001.json && echo
 
@@ -108,6 +106,12 @@ curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flight
 
 # update to 06:31, expecting an eventType FLIGHT_DELAYED business event
 curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-004.json && echo
+
+# get current status of flight
+curl http://localhost:8080/flightschedules/12345678 && echo
+
+# get current status of a flight that doesn't exist
+curl http://localhost:8080/flightschedules/1 && echo
 
 ```
 
@@ -126,5 +130,3 @@ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic topicin --bootstrap-server $ZK
 $KAFKA_HOME/bin/kafka-console-producer.sh --topic=topicin --broker-list=`broker-list.sh`
 $KAFKA_HOME/bin/kafka-console-producer.sh --topic topicin --broker-list=`broker-list.sh`
 ```
-
-

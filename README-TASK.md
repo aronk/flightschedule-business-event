@@ -30,7 +30,7 @@ d. Detecting and publishing FLIGHT_DELAYED business events based on estimated de
 7. A README file of how to run/test the application.
 
 ### Optional
-- Simple REST API to GET current status of a flight.
+8. Simple REST API to GET current status of a flight.
 
 ### Architectural Patterns:
 - Change Data Capture (CDC)
