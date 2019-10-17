@@ -48,7 +48,9 @@ Finally, the actual work could start after the github repository was created and
 1. High level architecture diagram for moving data from the ODS into the new NoSQL store.
 - See [high level architecture diagram](docs/ods-fss-architecture-diagram.png)
 - It is proposed that a single bulk/batch synchronisation of data is performed utilising the Kafka Connectors to both the source [RDBMS](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc) and the sink [MongoDB](https://www.confluent.io/hub/mongodb/kafka-connect-mongodb)
-- This diagram is based on [Confluent's data transfer best practices](https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc)
+- This bulk synchronisation step is the first of two steps in implementing the Change Data Capture (CDC) pattern
+- The second step is the real-time stream of changes that are documented is deliverable #2 next
+- This solution and diagram is based on [Confluent's data transfer best practices](https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc)
 
 2. Design a JSON event schema to capture database changes from the ODS according to the ERD diagram provided.
 - [JSON Schema](docs/flight-schedule-data-event.schema.json)
@@ -62,37 +64,37 @@ Finally, the actual work could start after the github repository was created and
 - [JSON Sample](docs/flight-schedule-business-event.json)
 
 4. Build a new micro service capable of:
-a. Consuming database change events
-b. Transforming them to a domain model
-c. Storing into NoSQL
-d. Detecting and publishing FLIGHT_DELAYED business events based on estimated departure time increasing by >15min of previous time.
+    - a. Consuming database change events
+    - b. Transforming them to a domain model
+    - c. Storing into NoSQL
+    - d. Detecting and publishing FLIGHT_DELAYED business events based on estimated departure time increasing by >15min of previous time.
 - See [application architecture diagram](docs/application-architecture-medium.png)
-- Below I will describe how a message flows through the system, I will reference the numbers in the above diagram
-- 1. acting as a test client, curl, is used to send a message
-- 2. acting as a test client, a controller method, is used to handle the message and send it to a producer
-- 3. acting as a test client, the producer sends the message to the 'topicin' topic
-- 4. the 'topicin' topic is where the stream of ODS data changes can be consumed from
-- 5. a stream listener for data changes
-- 6. a service to lookup existing and store new flight schedule as well as calculate if any business events need to be sent
-- 7. the document collection storage
-- 8. a producer of business events
-- 9. the 'topicout' topic is where the stream of flight schedule business events can be consumed from
-- 10. acting as a test client, a listener, is consuming from the 'topicout' topic
-- 11. request the status a flight schedule using curl
-- 12. a controller method handles the flight schedule status request
+- Below I will describe how a request flows through the system, I will reference the annotated numbers in the above diagram:
+    - 1. acting as a test client, curl, is used to send a HTTP request
+    - 2. to aid in testing, a controller method is used to handle the request and send it to a producer
+    - 3. to aid in testing, the producer sends the message to the 'topicin' topic
+    - 4. the 'topicin' topic is where the stream of ODS data changes can be consumed from, normally this would be populated by capturing the database changes in ODS
+    - 5. a stream listener for data changes
+    - 6. a service to lookup existing and store new flight schedule as well as calculate the new status of the flight schedule
+    - 7. the flight schedule (fs) document collection storage
+    - 8. a producer of business events, currently on flight delayed is supported, sending to the 'topicout' topic
+    - 9. the 'topicout' topic is where the flight schedule business events can be consumed from
+    - 10. acting as a test client, a listener, is consuming from the 'topicout' topic and logging the message to the console
+    - 11. acting as a test clint, curl, is used to send a HTTP request to get the status a flight schedule
+    - 12. a controller method handles the flight schedule status request and retrieves it from storage via the service and repository
 
 5. Docker Compose file for any external dependencies i.e. message broker and NoSQL database.
-- See [docker-compose.yml](docker-compose.yml)
+- See the [docker compose file](docker-compose.yml)
 
 6. Code checked into GitHub
 - https://github.com/aronk/flightschedule-business-event
 
 7. A README file of how to run/test the application.
-- See [README](README.md)
+- See the [README file](README.md)
 
 ### Optional
 8. Simple REST API to GET current status of a flight.
-- See the how to test running application part of the [README.md](README.md)
+- See the 'Test running application' part of the [README file](README.md)
 
 ## Future considerations
 - security
@@ -107,3 +109,4 @@ d. Detecting and publishing FLIGHT_DELAYED business events based on estimated de
 - offset management
 - idempotent consumers
 - atomic operations (transactions) between interactions with Mongo and Kafka
+- schema enforcement and evolution for messages

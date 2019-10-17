@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Flight Schedule",
-  "description": "An airline flight schedule",
+  "title": "Flight Schedule Data Event Schema",
+  "description": "Flight schedule data change event stream",
   "type": "object",
   "properties": {
     "flightScheduleId": {
