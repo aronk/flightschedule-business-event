@@ -1,0 +1,93 @@
+# to run with a profile use -Dprofile={profile_id}
+# for ex: -Dprofile=prod, otherwise local is enabled by default
+spring.profiles.active: ${profile:local}
+
+info:
+  app:
+    name: flightschedule-business-event
+    description: Flight Schedule Business Event
+    version: 1.0.0
+
+management.endpoints.web.expose: "*"
+management.endpoints.web.exposure.include: "*"
+management.endpoints.lorica-health.enabled: true
+# show-details on the health endpoint shows the database and disk space metrics
+management.endpoint.health.show-details: always
+
+spring.data.mongodb.authentication-database: admin
+spring.data.mongodb.username: root
+spring.data.mongodb.password: example
+spring.data.mongodb.database: test_db
+spring.data.mongodb.port: 27017
+spring.data.mongodb.host: ${APP_MONGODB_HOST:localhost}
+
+spring:
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers:
+            - ${APP_KAFKA_BROKER:localhost:9092}
+      bindings:
+        # topicin
+        topicin-sub:
+          binder: kafka
+          destination: topicin
+          content-type: application/json
+          group: topicin-sub-group-1
+        topicin-pub:
+          binder: kafka
+          destination: topicin
+          group: topicin-pub-group-1
+          content-type: application/json
+        # topicout
+        topicout-sub:
+          binder: kafka
+          destination: topicout
+          content-type: application/json
+          group: topicout-sub-group-1
+        topicout-pub:
+          binder: kafka
+          destination: topicout
+          group: topicout-pub-group-1
+          content-type: application/json
+
+---
+spring:
+  profiles: local
+
+---
+spring:
+  profiles: prod
+
+---
+spring:
+  profiles: debug
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.aron: DEBUG
+    org.apache.http.wire: DEBUG
+
+---
+spring:
+  profiles: info
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.aron: INFO
+
+---
+spring.profiles: local
+spring.profiles.include: debug
+
+---
+spring.profiles: prod
+spring.profiles.include: info
+
+---

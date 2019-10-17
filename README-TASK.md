@@ -24,7 +24,7 @@ application.
 a. Consuming database change events
 b. Transforming them to a domain model
 c. Storing into NoSQL
-d. Detecting and publishing FLIGHT_DELAYED business events based on estimated departure time increasing by &gt; 15min of previous time.
+d. Detecting and publishing FLIGHT_DELAYED business events based on estimated departure time increasing by >15min of previous time.
 5. Docker Compose file for any external dependencies i.e. message broker and NoSQL database.
 6. Code checked into GitHub
 7. A README file of how to run/test the application.

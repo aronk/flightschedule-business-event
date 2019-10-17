@@ -1,0 +1,14 @@
+FROM maven:3.5-jdk-8-alpine
+
+#Get user/group names and ids from host to allow correct sharing of files
+ARG MAVEN_USER_ID
+ARG MAVEN_USER_NAME
+ARG MAVEN_GROUP_ID
+ARG MAVEN_GROUP_NAME
+
+RUN addgroup -g ${MAVEN_GROUP_ID} ${MAVEN_GROUP_NAME}
+RUN adduser -S -u ${MAVEN_USER_ID} -G ${MAVEN_GROUP_NAME} ${MAVEN_USER_NAME}
+RUN mkdir /var/maven
+RUN mkdir /var/maven/.m2 && chown -R ${MAVEN_USER_NAME} /var/maven
+
+USER ${MAVEN_USER_NAME}
