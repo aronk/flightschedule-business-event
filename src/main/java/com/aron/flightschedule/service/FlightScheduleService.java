@@ -8,7 +8,6 @@ import com.aron.flightschedule.repository.FlightScheduleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -25,28 +24,22 @@ public class FlightScheduleService {
     private final FlightScheduleStreams flightScheduleStreams;
     private final FlightScheduleRepository flightScheduleRepository;
     private final FlightScheduleTransformer flightScheduleTransformer;
+    private final BusinessEventProducer businessEventProducer;
     private final Long estimatedDepartureTimeDeltaMins;
 
     public FlightScheduleService(FlightScheduleStreams flightScheduleStreams,
                                  FlightScheduleRepository flightScheduleRepository,
                                  FlightScheduleTransformer flightScheduleTransformer,
+                                 BusinessEventProducer businessEventProducer,
                                  @Value("${fs.app.estimatedDepartureTimeDeltaMins:15}") Long estimatedDepartureTimeDeltaMins,
                                  ObjectMapper objectMapper) {
         this.flightScheduleStreams = flightScheduleStreams;
         this.flightScheduleRepository = flightScheduleRepository;
         this.flightScheduleTransformer = flightScheduleTransformer;
+        this.businessEventProducer = businessEventProducer;
         this.estimatedDepartureTimeDeltaMins = estimatedDepartureTimeDeltaMins;
-        log.info("flightScheduleStreams={}, flightScheduleRepository={}, flightScheduleTransformer={}, estimatedDepartureTimeDeltaMins={}, objectMapper={}",
-                flightScheduleStreams, flightScheduleRepository, flightScheduleTransformer, estimatedDepartureTimeDeltaMins, objectMapper);
-    }
-
-    public void sendDataEventTest(final FlightScheduleDataEvent flightScheduleDataEvent) {
-        log.info("Sending  flightScheduleDataEvent: {}", flightScheduleDataEvent);
-
-        MessageChannel messageChannel = flightScheduleStreams.topicInPublish();
-        messageChannel.send(MessageBuilder.withPayload(flightScheduleDataEvent)
-                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
-                .build());
+        log.info("flightScheduleStreams={}, flightScheduleRepository={}, flightScheduleTransformer={}, businessEventProducer={}, estimatedDepartureTimeDeltaMins={}, objectMapper={}",
+                flightScheduleStreams, flightScheduleRepository, flightScheduleTransformer, businessEventProducer, estimatedDepartureTimeDeltaMins, objectMapper);
     }
 
     public void processFlightScheduleDataEvent(FlightScheduleDataEvent flightScheduleDataEvent) {
@@ -68,12 +61,7 @@ public class FlightScheduleService {
         if (isFlightDelayed) {
 
             FlightScheduleBusinessEvent flightScheduleBusinessEvent = flightScheduleTransformer.toFlightDelayedBusinessEvent(newFlightSchedule);
-            log.info("Sending  flightScheduleBusinessEvent: {}", flightScheduleBusinessEvent);
-
-            flightScheduleStreams.topicOutPublish()
-                    .send(MessageBuilder.withPayload(flightScheduleBusinessEvent)
-                            .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
-                            .build());
+            businessEventProducer.sendBusinessEvent(flightScheduleBusinessEvent);
         }
 
     }

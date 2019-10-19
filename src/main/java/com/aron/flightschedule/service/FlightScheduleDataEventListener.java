@@ -18,7 +18,7 @@ public class FlightScheduleDataEventListener {
 
     @StreamListener(FlightScheduleStreams.TOPICIN_SUB)
     public void handleFlightScheduleDataEvent(@Payload FlightScheduleDataEvent flightScheduleDataEvent) {
-        log.info("Received flightScheduleDataEvent: {}", flightScheduleDataEvent);
+        log.debug("Received flightScheduleDataEvent: {}", flightScheduleDataEvent);
 
         if (flightScheduleDataEvent == null) {
             log.error("handleFlightScheduleDataEvent(): not processing message, flightScheduleDataEvent={}", flightScheduleDataEvent);

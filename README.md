@@ -92,16 +92,16 @@ curl http://localhost:8080/actuator/info && echo
 curl http://localhost:8080/actuator/health && echo
 
 # initial create for 06:20
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-001.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/test/flightschedules/data-events -d @docs/flight-schedule-data-event-001.json && echo
 
 # update to 06:30
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-002.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/test/flightschedules/data-events -d @docs/flight-schedule-data-event-002.json && echo
 
 # update to 06:15
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-003.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/test/flightschedules/data-events -d @docs/flight-schedule-data-event-003.json && echo
 
 DELAYED
-curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/flightschedules/data-events -d @docs/flight-schedule-data-event-004.json && echo
+curl -i -X POST -H "Content-Type: application/json" http://localhost:8080/test/flightschedules/data-events -d @docs/flight-schedule-data-event-004.json && echo
 
 # get current status of flight returning 200
 curl http://localhost:8080/flightschedules/12345678 && echo

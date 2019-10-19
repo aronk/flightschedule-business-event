@@ -8,11 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class FlightScheduleBusinessEventListener {
+public class FlightScheduleBusinessEventTestListener {
 
+    // NOTE: only here to help in testing application to be able to receive, and log, messages on output topic: 'topicout'
     @StreamListener(FlightScheduleStreams.TOPICOUT_SUB)
     public void handleGreetings(@Payload FlightScheduleBusinessEvent flightScheduleBusinessEvent) {
-        log.info("Received flightScheduleBusinessEvent: {}", flightScheduleBusinessEvent);
+        log.debug("Received flightScheduleBusinessEvent: {}", flightScheduleBusinessEvent);
     }
 
 }
