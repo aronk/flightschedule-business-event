@@ -48,6 +48,8 @@ Finally, the actual work could start after the github repository was created and
 1. High level architecture diagram for moving data from the ODS into the new NoSQL store.
 - See [high level architecture diagram](docs/ods-fss-architecture-diagram.png)
 - It is proposed that a single bulk/batch synchronisation of data is performed utilising the Kafka Connectors to both the source [RDBMS](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc) and the sink [MongoDB](https://www.confluent.io/hub/mongodb/kafka-connect-mongodb)
+- ODS is the RDBMS source of the data and the new Flight Schedule System's (FSS) MongoDB database is the sink (destination)
+- Kafka Connector architecture is well suited to this task  
 - This bulk synchronisation step is the first of two steps in implementing the Change Data Capture (CDC) pattern
 - The second step is the real-time stream of changes that are documented is deliverable #2 next
 - This solution and diagram is based on [Confluent's data transfer best practices](https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc)
@@ -68,8 +70,8 @@ Finally, the actual work could start after the github repository was created and
     - b. Transforming them to a domain model
     - c. Storing into NoSQL
     - d. Detecting and publishing FLIGHT_DELAYED business events based on estimated departure time increasing by >15min of previous time.
-- See [application architecture diagram](docs/application-architecture-medium.png)
-- Below I will describe how a request flows through the system, I will reference the annotated numbers in the above diagram:
+- See [application architecture diagram](docs/application-architecture-medium.png) for the FSS application
+- Below are the steps for how a request flows through the system, referencing the annotated numbers in the above diagram:
     - 1. acting as a test client, curl, is used to send a HTTP request
     - 2. to aid in testing, a controller method is used to handle the request and send it to a producer
     - 3. to aid in testing, the producer sends the message to the 'topicin' topic
