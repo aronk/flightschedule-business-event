@@ -98,7 +98,7 @@ Finally, the actual work could start after the github repository was created and
 
 ### Optional
 8. Simple REST API to GET current status of a flight.
-- See the item 12. above and also the 'Test running application' section of the [README file](README.md) for how to test
+- See the [controller](src/main/java/com/aron/flightschedule/controller/FlightScheduleController.java) and also the 'Test running application' section of the [README file](README.md) for how to test
 
 ## Possible future considerations
 - separate CQRS concerns and modularise
@@ -121,5 +121,3 @@ Finally, the actual work could start after the github repository was created and
 - code quality: checkstyle, code coverage, sonar, image vulnerability scanning, code review, coding standards, container security standards
 - build/test/deploy pipeline
  
-
-- 

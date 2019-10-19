@@ -43,7 +43,6 @@ public class FlightScheduleControllerTest {
 
     @Test
     public void shouldReturn_notFound_getFlightSchedule_WhenInvalidRequest() throws Exception {
-
         Long flightScheduleId = 1L;
         String requestUrl = createGetFlightScheduleUrl(flightScheduleId);
         log.debug("requestUrl={}", requestUrl);
@@ -63,7 +62,6 @@ public class FlightScheduleControllerTest {
 
     @Test
     public void shouldReturn_ok_getFlightSchedule_WhenValidRequest() throws Exception {
-
         Long flightScheduleId = 12345678L;
         String requestUrl = createGetFlightScheduleUrl(flightScheduleId);
         log.debug("requestUrl={}", requestUrl);
@@ -86,20 +84,5 @@ public class FlightScheduleControllerTest {
                 .andExpect(jsonPath("@.status").value(TEST_FLIGHT_SCHEDULE_STATUS.name()))
                 .andExpect(status().isOk());
     }
-
-
-//    // parties
-//
-//    @Test
-//    public void shouldReturn_unauthorized_ForParties_WhenNoCredentialsSupplied() throws Exception {
-//
-//        String requestUrl = createPartiesUrl();
-//
-//        this.mockMvc.perform(get(requestUrl))
-//                .andDo(print())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-//                .andExpect(content().string(UNAUTHORISED_RESPONSE_BODY))
-//                .andExpect(status().isUnauthorized());
-//    }
 
 }

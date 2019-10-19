@@ -40,8 +40,17 @@ public class FlightScheduleTransformer {
                         .destinationPort(flightSchedule.getDestinationPort())
                         .destinationCountry(flightSchedule.getDestinationCountry())
                         .airline(flightSchedule.getAirline())
-                        .flightScheduleStatus(flightSchedule.getStatus().name())
+                        .flightScheduleStatus(getFlightScheduleStatusString(flightSchedule))
                         .build())
                 .build();
     }
+
+    private String getFlightScheduleStatusString(FlightSchedule flightSchedule) {
+        if (flightSchedule != null
+                && flightSchedule.getStatus() != null) {
+            return flightSchedule.getStatus().name();
+        }
+        return null;
+    }
+
 }
