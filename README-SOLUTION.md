@@ -77,7 +77,7 @@ Finally, the actual work could start after the github repository was created and
     - 3. to aid in testing, the [producer](src/main/java/com/aron/flightschedule/service/DataEventProducer.java) sends the message to the 'topicin' topic
     - 4. the 'topicin' topic is where the stream of ODS data changes can be consumed from, normally this would be populated by capturing the database changes in ODS
     - 5. a stream [listener](src/main/java/com/aron/flightschedule/service/FlightScheduleDataEventListener.java) for data changes
-    - 6. a [service](src/main/java/com/aron/flightschedule/service/FlightScheduleService.java) to lookup existing and store new flight schedule as well as calculate the new status of the flight schedule
+    - 6. the command is handled by the [service](src/main/java/com/aron/flightschedule/service/FlightScheduleService.java) to lookup existing and store new flight schedule as well as calculate the new status of the flight schedule
     - 7. the flight schedule (fs) document collection storage
     - 8. a [producer](src/main/java/com/aron/flightschedule/service/BusinessEventProducer.java) of business events, currently on flight delayed is supported, sending to the 'topicout' topic
     - 9. the 'topicout' topic is where the flight schedule business events can be consumed from
