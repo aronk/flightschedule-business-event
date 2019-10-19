@@ -8,10 +8,7 @@ import com.aron.flightschedule.repository.FlightScheduleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MimeTypeUtils;
 
 import java.util.Optional;
 
@@ -21,25 +18,22 @@ import static com.aron.flightschedule.util.FlightScheduleUtils.isDateTimeOutside
 @Slf4j
 public class FlightScheduleService {
 
-    private final FlightScheduleStreams flightScheduleStreams;
     private final FlightScheduleRepository flightScheduleRepository;
     private final FlightScheduleTransformer flightScheduleTransformer;
     private final BusinessEventProducer businessEventProducer;
     private final Long estimatedDepartureTimeDeltaMins;
 
-    public FlightScheduleService(FlightScheduleStreams flightScheduleStreams,
-                                 FlightScheduleRepository flightScheduleRepository,
+    public FlightScheduleService(FlightScheduleRepository flightScheduleRepository,
                                  FlightScheduleTransformer flightScheduleTransformer,
                                  BusinessEventProducer businessEventProducer,
                                  @Value("${fs.app.estimatedDepartureTimeDeltaMins:15}") Long estimatedDepartureTimeDeltaMins,
                                  ObjectMapper objectMapper) {
-        this.flightScheduleStreams = flightScheduleStreams;
         this.flightScheduleRepository = flightScheduleRepository;
         this.flightScheduleTransformer = flightScheduleTransformer;
         this.businessEventProducer = businessEventProducer;
         this.estimatedDepartureTimeDeltaMins = estimatedDepartureTimeDeltaMins;
-        log.info("flightScheduleStreams={}, flightScheduleRepository={}, flightScheduleTransformer={}, businessEventProducer={}, estimatedDepartureTimeDeltaMins={}, objectMapper={}",
-                flightScheduleStreams, flightScheduleRepository, flightScheduleTransformer, businessEventProducer, estimatedDepartureTimeDeltaMins, objectMapper);
+        log.info("flightScheduleRepository={}, flightScheduleTransformer={}, businessEventProducer={}, estimatedDepartureTimeDeltaMins={}, objectMapper={}",
+                flightScheduleRepository, flightScheduleTransformer, businessEventProducer, estimatedDepartureTimeDeltaMins, objectMapper);
     }
 
     public void processFlightScheduleDataEvent(FlightScheduleDataEvent flightScheduleDataEvent) {
