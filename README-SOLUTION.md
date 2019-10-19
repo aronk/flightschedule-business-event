@@ -47,7 +47,7 @@ Finally, the actual work could start after the github repository was created and
 ## Deliverables
 1. High level architecture diagram for moving data from the ODS into the new NoSQL store.
 - See [high level architecture diagram](docs/ods-fss-architecture-diagram.png)
-- It is proposed that a single bulk/batch synchronisation of data is performed utilising the Kafka Connectors to both the source [RDBMS](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc) and the sink [MongoDB](https://www.confluent.io/hub/mongodb/kafka-connect-mongodb)
+- It is proposed that a single bulk/batch synchronisation of data is performed utilising the Kafka Connectors to both the [source RDBMS](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc) and the [sink MongoDB](https://www.confluent.io/hub/mongodb/kafka-connect-mongodb)
 - ODS is the RDBMS source of the data and the new Flight Schedule System's (FSS) MongoDB database is the sink (destination)
 - Kafka Connector architecture is well suited to this task  
 - This bulk synchronisation step is the first of two steps in implementing the Change Data Capture (CDC) pattern
@@ -75,12 +75,12 @@ Finally, the actual work could start after the github repository was created and
     - 1. acting as a test client, curl, is used to send a HTTP request
     - 2. to aid in testing, a [controller](src/main/java/com/aron/flightschedule/controller/FlightScheduleDataEventTestController.java) method is used to handle the request and send it to a producer
     - 3. to aid in testing, the [producer](src/main/java/com/aron/flightschedule/service/DataEventProducer.java) sends the message to the 'topicin' topic
-    - 4. the 'topicin' topic is where the stream of ODS data changes can be consumed from, normally this would be populated by capturing the database changes in ODS
+    - 4. the ['topicin'](src/main/resources/application.yml#L33) topic is where the stream of ODS data changes can be consumed from, normally this would be populated by capturing the database changes in ODS
     - 5. a stream [listener](src/main/java/com/aron/flightschedule/service/FlightScheduleDataEventListener.java) for data changes
-    - 6. the command is handled by the [service](src/main/java/com/aron/flightschedule/service/FlightScheduleService.java) to lookup existing and store new flight schedule as well as calculate the new status of the flight schedule
-    - 7. the flight schedule (fs) document collection storage
+    - 6. the command is handled by the [service](src/main/java/com/aron/flightschedule/service/FlightScheduleService.java) to lookup existing, [transform](src/main/java/com/aron/flightschedule/model/FlightScheduleTransformer.java) to the [domain model](src/main/java/com/aron/flightschedule/model/FlightSchedule.java) and store new flight schedule using the [repository](src/main/java/com/aron/flightschedule/repository/FlightScheduleRepository.java) including the calculated status of the flight schedule
+    - 7. the flight schedule (fs) document collection [database](src/main/resources/application.yml#L20)
     - 8. a [producer](src/main/java/com/aron/flightschedule/service/BusinessEventProducer.java) of business events, currently on flight delayed is supported, sending to the 'topicout' topic
-    - 9. the 'topicout' topic is where the flight schedule business events can be consumed from
+    - 9. the ['topicout'](src/main/resources/application.yml#L44) topic is where the flight schedule business events can be consumed from
     - 10. acting as a test client, a [listener](src/main/java/com/aron/flightschedule/service/FlightScheduleBusinessEventTestListener.java), is consuming from the 'topicout' topic and logging the message to the console
     - 11. acting as a test clint, curl, is used to send a HTTP request to get the status a flight schedule
     - 12. a [controller](src/main/java/com/aron/flightschedule/controller/FlightScheduleController.java) method handles the flight schedule status request and delegates the query to the service
@@ -88,6 +88,7 @@ Finally, the actual work could start after the github repository was created and
 
 5. Docker Compose file for any external dependencies i.e. message broker and NoSQL database.
 - See the [docker compose file](docker-compose.yml)
+- Components to be run in this order are: zookeeper, kafka, mongo, mongo-ui (optional, for testing only), maven-build and finally the fs-app
 
 6. Code checked into GitHub
 - https://github.com/aronk/flightschedule-business-event
@@ -97,15 +98,18 @@ Finally, the actual work could start after the github repository was created and
 
 ### Optional
 8. Simple REST API to GET current status of a flight.
-- See the 'Test running application' part of the [README file](README.md)
+- See the item 12. above and also the 'Test running application' section of the [README file](README.md) for how to test
 
-## Future considerations
-- security
+## Possible future considerations
+- separate CQRS concerns and modularise
+- tests for controller, model, service, Kafka listener and sender, Mongo repository
+- add integration tests for producer, listener and repository type classes
+- other types of tests: functional/system, contract based, property based, performance, load, penetration/vulnerability
+- security, encryption (at rest and in transit), credentials, authentication and authorisation
 - tracing, auditing
 - timezone translation
 - data in mongo db is not persisted as there is no volume definition in the compose file related to the mongo service
 - domain modelling
-- tests for controller, model, service, Kafka listener and sender, Mongo repository
 - further requirements on other business events and a suitable pattern for executing the rules and notifications
 - partitioning of topics
 - concurrency of producers and consumers
@@ -113,3 +117,9 @@ Finally, the actual work could start after the github repository was created and
 - idempotent consumers
 - atomic operations (transactions) between interactions with Mongo and Kafka
 - schema enforcement and evolution for messages
+- fault tolerance and error handling
+- code quality: checkstyle, code coverage, sonar, image vulnerability scanning, code review, coding standards, container security standards
+- build/test/deploy pipeline
+ 
+
+- 
