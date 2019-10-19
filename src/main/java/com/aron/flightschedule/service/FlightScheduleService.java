@@ -5,7 +5,6 @@ import com.aron.flightschedule.model.FlightScheduleBusinessEvent;
 import com.aron.flightschedule.model.FlightScheduleDataEvent;
 import com.aron.flightschedule.model.FlightScheduleTransformer;
 import com.aron.flightschedule.repository.FlightScheduleRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,14 +25,13 @@ public class FlightScheduleService {
     public FlightScheduleService(FlightScheduleRepository flightScheduleRepository,
                                  FlightScheduleTransformer flightScheduleTransformer,
                                  BusinessEventProducer businessEventProducer,
-                                 @Value("${fs.app.estimatedDepartureTimeDeltaMins:15}") Long estimatedDepartureTimeDeltaMins,
-                                 ObjectMapper objectMapper) {
+                                 @Value("${fs.app.estimatedDepartureTimeDeltaMins:15}") Long estimatedDepartureTimeDeltaMins) {
         this.flightScheduleRepository = flightScheduleRepository;
         this.flightScheduleTransformer = flightScheduleTransformer;
         this.businessEventProducer = businessEventProducer;
         this.estimatedDepartureTimeDeltaMins = estimatedDepartureTimeDeltaMins;
-        log.info("flightScheduleRepository={}, flightScheduleTransformer={}, businessEventProducer={}, estimatedDepartureTimeDeltaMins={}, objectMapper={}",
-                flightScheduleRepository, flightScheduleTransformer, businessEventProducer, estimatedDepartureTimeDeltaMins, objectMapper);
+        log.info("flightScheduleRepository={}, flightScheduleTransformer={}, businessEventProducer={}, estimatedDepartureTimeDeltaMins={}",
+                flightScheduleRepository, flightScheduleTransformer, businessEventProducer, estimatedDepartureTimeDeltaMins);
     }
 
     public void processFlightScheduleDataEvent(FlightScheduleDataEvent flightScheduleDataEvent) {
@@ -53,7 +51,6 @@ public class FlightScheduleService {
         log.debug("newFlightScheduleSaved={}", newFlightScheduleSaved);
 
         if (isFlightDelayed) {
-
             FlightScheduleBusinessEvent flightScheduleBusinessEvent = flightScheduleTransformer.toFlightDelayedBusinessEvent(newFlightSchedule);
             businessEventProducer.sendBusinessEvent(flightScheduleBusinessEvent);
         }
