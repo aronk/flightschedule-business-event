@@ -1,7 +1,7 @@
 # Solution
 
 ## Overview
-Having read the task objectives and deliverables, it was quite clear the solution would be well suited to an [Apache Kafka](https://kafka.apache.org/documentation/) (for event based messaging and streaming) and [MongoDB](https://www.mongodb.com/what-is-mongodb) (for document NoSQL database) based solution.
+Having read the task constraints and deliverables, it was quite clear the solution would be well suited to an [Apache Kafka](https://kafka.apache.org/documentation/) (for event based messaging and streaming) and [MongoDB](https://www.mongodb.com/what-is-mongodb) (for document NoSQL database) based solution.
 
 <details>
   <summary>First step was to perform high-level research of the following:</summary>
@@ -51,7 +51,7 @@ Finally, the actual work could start after the github repository was created and
 - ODS is the RDBMS source of the data and the new Flight Schedule System's (FSS) MongoDB database is the sink (destination)
 - Kafka Connector architecture is well suited to this task  
 - This bulk synchronisation step is the first of two steps in implementing the Change Data Capture (CDC) pattern
-- The second step is the real-time stream of changes that are documented is deliverable #2 next
+- The second step is the real-time stream of changes that are documented in deliverable #2 next
 - This solution and diagram is based on [Confluent's data transfer best practices](https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc)
 
 2. Design a JSON event schema to capture database changes from the ODS according to the ERD diagram provided.
